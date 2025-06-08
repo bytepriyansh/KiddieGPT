@@ -7,12 +7,12 @@ export async function POST(req: NextRequest) {
     const data = await req.json()
     const { url } = data
 
-    const base64Image:any = await convertImage(url)
+    const base64Image: any = await convertImage(url)
 
     const fileName = "/ai-story/" + Date.now() + ".png"
     const imageRef = ref(storage, fileName)
 
-    await uploadString(imageRef, base64Image, "base64").then((snapshot) => {
+    await uploadString(imageRef, base64Image, "base64").then(() => {
         console.log("File Uploaded")
     })
 
@@ -22,12 +22,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ imageUrl: downloadedUrl })
 }
 
-export const convertImage = async (imageUrl: string) => {
+const convertImage = async (imageUrl: string) => {
     try {
-        const res = await axios.get(imageUrl, { responseType: "arraybuffer" });
-        return Buffer.from(res.data).toString("base64"); 
+        const res = await axios.get(imageUrl, { responseType: "arraybuffer" })
+        return Buffer.from(res.data).toString("base64")
     } catch (error) {
-        console.log("Error converting image: ", error);
-        return ""; 
+        console.log("Error converting image: ", error)
+        return ""
     }
-};
+}
